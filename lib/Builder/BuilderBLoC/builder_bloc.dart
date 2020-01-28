@@ -151,22 +151,6 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
       yield FinishGenKey(stdout: output);
 
       // TODO: use the outputPath -> *.keystore (name the key with the directory name)
-      /// the following code is an example to generate a sample key
-//      builderBloc.add(
-//                              GenKey(
-//                                storePass: 'storePass',
-//                                alias: 'alias',
-//                                aliasPass: 'aliasPass',
-//                                aliasYears: 25 * 365,
-//                                name: 'coname',
-//                                org: 'org',
-//                                state: 'state',
-//                                orgUnit: 'orgUnit',
-//                                city: 'city',
-//                                country: 'country',
-//                                target: 'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\ks.keystore',
-//                              ),
-//                            );
       add(
         APKSign(
             alias: 'alias',

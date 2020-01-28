@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:window_utils/window_utils.dart';
 
 import 'Builder/BuilderBLoC/builder_bloc.dart';
 import 'Builder/apk_builder_screen.dart';
@@ -16,7 +17,20 @@ void main() {
 }
 
 ///
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => WindowUtils.hideTitleBar(),
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -73,25 +87,73 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: TabBar(
-          tabs: const <Widget>[
-            Tab(
-              text: 'Decode',
-            ),
-            Tab(
-              text: 'Build',
-            ),
-          ],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: Stack(
+            children: <Widget>[
+              GestureDetector(
+                onTapDown: (_) => WindowUtils.startDrag(),
+                child: AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  title: Text('Slicer'),
+                  leading: Icon(
+                    Icons.android,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 40,
+                child: IconButton(
+                  icon: Icon(Icons.remove),
+                  onPressed: WindowUtils.minWindow,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                child: IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: WindowUtils.closeWindow,
+                ),
+              ),
+            ],
+          ),
         ),
-        body: TabBarView(
+        body: Column(
           children: <Widget>[
-            BlocProvider.value(
-              value: decoderBloc,
-              child: APKDecoder(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                color: Colors.grey[100],
+                elevation: 6,
+                child: TabBar(
+                  tabs: const <Widget>[
+                    Tab(
+                      text: 'Decode',
+                    ),
+                    Tab(
+                      text: 'Build',
+                    ),
+                  ],
+                ),
+              ),
             ),
-            BlocProvider.value(
-              value: builderBloc,
-              child: APKBuilder(),
+            Expanded(
+              child: TabBarView(
+                children: <Widget>[
+                  BlocProvider.value(
+                    value: decoderBloc,
+                    child: APKDecoder(),
+                  ),
+                  BlocProvider.value(
+                    value: builderBloc,
+                    child: APKBuilder(),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
