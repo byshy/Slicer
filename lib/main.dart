@@ -33,32 +33,40 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'APK Dissolver',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        tabBarTheme: TabBarTheme(
-          labelColor: Colors.black,
-        ),
-        appBarTheme: AppBarTheme(
-          textTheme: TextTheme(
-            title: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          color: Colors.white,
-          elevation: 3,
-        ),
-        primarySwatch: Colors.blue,
-        fontFamily: 'Roboto',
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.blue,
+          width: 2
+        )
       ),
-      home: MyHomePage(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Slicer',
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          tabBarTheme: TabBarTheme(
+            labelColor: Colors.black,
+          ),
+          appBarTheme: AppBarTheme(
+            textTheme: TextTheme(
+              title: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            color: Colors.white,
+            elevation: 3,
+          ),
+          primarySwatch: Colors.blue,
+          fontFamily: 'Roboto',
+        ),
+        home: MyHomePage(),
+      ),
     );
   }
 }

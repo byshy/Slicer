@@ -5,7 +5,8 @@ import 'package:archive/archive.dart';
 import 'package:archive/archive_io.dart';
 import './bloc.dart';
 
-/// BLoC for decoder portion of the app
+/// BLoC for decoder portion of the app, in order to make this operation work
+/// you need to add apktool to system environment.
 class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
   @override
   DecoderState get initialState => InitialDecoderState();
@@ -29,8 +30,6 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
       final result = await Process.run(
         'file_chooser.bat', [],
         runInShell: true,
-        workingDirectory:
-        'C:\\Users\\byshy\\AndroidStudioProjects\\flutter-desktop-embedding-master\\example\\lib',
       );
       apkPath = result.stdout.toString().trim();
       yield GotAPK(path: apkPath);
@@ -51,6 +50,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
         ['d', apkPath],
         runInShell: true,
         workingDirectory: 'C:\\Users\\byshy\\Desktop\\APKDissolverOut',
+        // TODO: make the directory dynamic, when shared preferences start to support windows
       );
 
       name = event.oldName.substring(0, event.oldName.length - 4);
@@ -67,6 +67,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
         [apkPath],
         runInShell: true,
         workingDirectory: 'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$name',
+        // TODO: make the directory dynamic, when shared preferences start to support windows
       );
 
       output = '$output\n${result.stdout}';
@@ -78,6 +79,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
         ['$name.apk', newName],
         runInShell: true,
         workingDirectory: 'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$name',
+        // TODO: make the directory dynamic, when shared preferences start to support windows
       );
 
       output = '$output\n${result.stdout}';
@@ -87,6 +89,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
       add(CallDEX2JAR());
     } else if (event is GetDEX){
       final bytes = File('C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$name\\$newName').readAsBytesSync();
+      // TODO: make the directory dynamic, when shared preferences start to support windows
 
       final archive = ZipDecoder().decodeBytes(bytes);
 
@@ -94,6 +97,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
         final filename = file.name;
         if (filename == 'classes.dex') {
           final List<int> data = file.content;
+          // TODO: make the directory dynamic, when shared preferences start to support windows
           File('C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$name\\$filename')
             ..createSync(recursive: true)
             ..writeAsBytesSync(data);
@@ -107,6 +111,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
       final result = await Process.run(
         'd2j-dex2jar.bat',
         ['C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$name\\classes.dex'],
+        // TODO: make the directory dynamic, when shared preferences start to support windows
         runInShell: true,
         workingDirectory: dex2jarPath,
       );
@@ -118,6 +123,7 @@ class DecoderBloc extends Bloc<DecoderEvent, DecoderState> {
       final result = await Process.run(
         'move',
         ['$dex2jarPath\\classes-dex2jar.jar', 'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$name'],
+        // TODO: make the directory dynamic, when shared preferences start to support windows
         runInShell: true,
       );
 

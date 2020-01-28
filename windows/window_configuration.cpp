@@ -19,7 +19,7 @@
 const unsigned int x = GetSystemMetrics(SM_CXSCREEN);
 const unsigned int y = GetSystemMetrics(SM_CYSCREEN);
 
-const wchar_t *kFlutterWindowTitle = L"Dissolver";
+const wchar_t *kFlutterWindowTitle = L"Slicer";
 const unsigned int kFlutterWindowWidth = 400;
 const unsigned int kFlutterWindowHeight = 500;
 const unsigned int kFlutterWindowOriginX = (x/2) - (kFlutterWindowWidth/2);

@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import './bloc.dart';
 
-/// BLoC for builder portion of the app
+/// BLoC for builder portion of the app, in order to make this operation work
+/// you need to add apktool to system environment.
 class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
   @override
   BuilderState get initialState => InitialBuilderState();
@@ -26,8 +27,6 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
         'folder_chooser.bat',
         [],
         runInShell: true,
-        workingDirectory:
-            'C:\\Users\\byshy\\AndroidStudioProjects\\flutter-desktop-embedding-master\\example\\lib',
       );
       outputPath = result.stdout.toString().trim();
 
@@ -51,6 +50,7 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
         ['b', outputPath],
         runInShell: true,
         workingDirectory: 'C:\\Users\\byshy\\Desktop\\APKDissolverOut',
+        // TODO: make the directory dynamic, when shared preferences start to support windows
       );
       output = '$output\n${result.stdout}';
       yield FinishAPKToolBCall(stdout: output);
@@ -81,7 +81,6 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
         ['/s', '/q', '$outputPath\\dist'],
         runInShell: true,
       );
-//      add(GenKey());
       add(
         GenKey(
           storePass: 'storePass',
@@ -96,6 +95,7 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
           country: 'country',
           target:
               'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\ks.keystore',
+          // TODO: make the directory dynamic, when shared preferences start to support windows
         ),
       );
     } else if (event is GenKey) {
@@ -142,6 +142,7 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
         ],
         runInShell: true,
         workingDirectory: 'C:\\Program Files\\Java\\jdk1.8.0_221\\bin',
+        // TODO: make the directory dynamic, when shared preferences start to support windows
       );
 
       final out = result.stdout.toString().isEmpty
@@ -153,13 +154,16 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
       // TODO: use the outputPath -> *.keystore (name the key with the directory name)
       add(
         APKSign(
-            alias: 'alias',
-            aliasPass: 'aliasPass',
-            storepass: 'storePass',
-            targetPath:
-                'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\$apkName.apk',
-            keystorePath:
-                'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\ks.keystore'),
+          alias: 'alias',
+          aliasPass: 'aliasPass',
+          storepass: 'storePass',
+          targetPath:
+              'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\$apkName.apk',
+          // TODO: make the directory dynamic, when shared preferences start to support windows
+          keystorePath:
+              'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\ks.keystore',
+          // TODO: make the directory dynamic, when shared preferences start to support windows
+        ),
       );
     } else if (event is APKSign) {
       final result = await Process.run(
@@ -178,6 +182,7 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
         ],
         runInShell: true,
         workingDirectory: 'C:\\Program Files\\Java\\jdk1.8.0_221\\bin',
+        // TODO: make the directory dynamic, when shared preferences start to support windows
       );
 
       final out = result.stdout.toString().isEmpty
@@ -187,18 +192,19 @@ class BuilderBloc extends Bloc<BuilderEvent, BuilderState> {
       yield FinishedSigning(stdout: output);
       add(
         APKAlignment(
-            outputAPK:
-                'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\${apkName}_DONE.apk',
-            inputAPK:
-                'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\$apkName.apk'),
+          outputAPK:
+              'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\${apkName}_DONE.apk',
+          // TODO: make the directory dynamic, when shared preferences start to support windows
+          inputAPK:
+              'C:\\Users\\byshy\\Desktop\\APKDissolverOut\\$apkName\\$apkName.apk',
+          // TODO: make the directory dynamic, when shared preferences start to support windows
+        ),
       );
     } else if (event is APKAlignment) {
       final result = await Process.run(
-        'zipalign',
+        'zipalign.exe',
         ['4', event.inputAPK, event.outputAPK],
         runInShell: true,
-        workingDirectory:
-            'C:\\Users\\byshy\\AppData\\Local\\Android\\Sdk\\build-tools\\29.0.2',
       );
 
       final out = result.stdout.toString().isEmpty
